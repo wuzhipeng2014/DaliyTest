@@ -1,0 +1,137 @@
+//字符串字符串问题
+/***************************************************************/
+/*******************@@@@@@@ 面试题 程序员面试宝典 p236******************************/
+/***************************************************************/
+
+//字符串中连续出现次数最多的子串
+//返回出现最多的字符串的次数
+int max_frequency_substr(char * str)
+{
+	//创建一个数组，存放所有的后缀字符串
+	int len = strlen(str);  //len记录字符串的长度
+	char** suffix = (char**) new char*[len]; //存放后缀字符串的数组
+	for (size_t i = 0; i < len; i++)
+	{
+		suffix[i] = &str[i];
+	}
+
+	int max_time = 0; //记录出现的最大次数
+	char * address = 0; //记录重复最多次数的子串的地址
+	int size = 0; //记录重复最多次数的子串的长度
+
+	int tmp_time = 0; //查找过程中用到的计数变量
+
+	//由连续子串出现的规律可知，子串的最大长度为（len+1）/2，并且在后缀字符串数组中的index为x ,x+step,x+2step,其中，step为重复子串的长度
+	for (size_t step = 1; step < (len+1)/2; step++)
+	{
+		//注意结束的条件为i+step,因为要保证至少重复一次
+		for (size_t i = 0; i+step < len; i+=step)
+		{
+			tmp_time = 0;
+			int t = i;
+			while (t+step<len&&(strncmp(suffix[t],suffix[t+step],step)==0))
+			{
+				tmp_time++;
+				t += step;
+
+			}
+			if (tmp_time>max_time)
+			{
+				max_time = tmp_time;
+				size = step;
+				address = suffix[i];
+			}
+		}
+		
+	}
+	cout << "重复次数最多的子串的长度为：" << size << endl;
+	cout << "重复次数最多的字符串为：" << address << endl;
+	return max_time;
+
+
+}
+
+//寻找字符串中重复的最长子字符串
+//返回最长子字符串的长度
+int max_size_repeate_substr(char *str)
+{
+	//在不允许子字符串交叉的情况下，子字符串的最大长度为(len+1)/2
+	int len = strlen(str);
+	char** suffix = new char*[len]; //记录后缀字符串的数组
+	for (size_t i = 0; i < len; i++)
+	{
+		suffix[i] = &str[i];
+	}
+	int max_size = 0;  //最大子字符串的长度
+	int time = 0; //最大子字符串出现的次数 
+	char * address = 0; //最大子字符串首次出现的地址
+	int tmp_size = 0;  //查找过程中用到的计数变量
+
+
+	for (size_t step = (len+1)/2; step >0; step--)
+	{
+		
+		for (size_t i = 0; i < len; i++)
+		{
+			time = 0;
+			tmp_size = step;
+			int t = i;
+			while (t+step<len)
+			{
+				if ((strncmp(suffix[i], suffix[t + step], step) == 0))
+				{
+					time++;
+					max_size = step;
+					cout << "子字符串的最大长度为" << max_size << endl;
+					cout << "首次出现的地址为" << suffix[i] << endl;
+					return max_size;
+				}
+				else
+				{
+					t++;
+				}
+				
+				
+			}
+			
+		}
+	}
+
+}
+
+//主字符串中某个子字符串以后的所有字符
+//不要使用任何已有的C程序（函数）
+char * strstr1(char* str, char* sub_str)
+{
+	if (str==NULL||sub_str==NULL)
+	{
+		return NULL;
+	}
+	for (size_t i = 0; str[i]!='\0'; i++)
+	{
+		int j = 0;
+		if (str[i] == sub_str[j])
+		{
+			int tmp = i; //记录开始比较的位置
+			
+			while (str[i++]==sub_str[j++])
+			{
+				if (sub_str[j]=='\0') //子字符串已经完全匹配
+				{
+					return &str[tmp];
+				}
+				if (str[i]=='\0')
+				{
+					return NULL;
+				}
+			}
+			i = tmp; //如果子字符串中途匹配失败，会在for循环语句中执行i++操作
+		}
+	}
+	return NULL;
+}
+
+
+/***************************************************************/
+/***************************************************************/
+/***************************************************************/
